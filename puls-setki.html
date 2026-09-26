@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Пульс сетки</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EEF0EE;
+    --bg-panel: #FFFFFF;
+    --bg-sunken: #E3E6E3;
+    --text: #14181A;
+    --text-dim: #5B6460;
+    --border: #CBD1CC;
+    --amber: #C97E1E;
+    --amber-soft: #F3E2C9;
+    --teal: #1E7A73;
+    --teal-soft: #D3E7E4;
+    --red-flag: #B3441F;
+    --track: #D6D9D5;
+    --shadow: rgba(20,24,26,0.08);
+    --reach-air: #2C5F8A;
+    --reach-air-soft: #D9E5EC;
+    --heat-strongneg-bg: #B3441F; --heat-strongneg-fg: #FFFFFF;
+    --heat-neg-bg: #C97E1E;       --heat-neg-fg: #FFFFFF;
+    --heat-neutral-bg: #D6D9D5;   --heat-neutral-fg: #14181A;
+    --heat-pos-bg: #1E7A73;       --heat-pos-fg: #FFFFFF;
+    --heat-strongpos-bg: #145952; --heat-strongpos-fg: #FFFFFF;
+    --radius: 3px;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --bg: #14181A;
+      --bg-panel: #1B2023;
+      --bg-sunken: #101314;
+      --text: #E9ECE9;
+      --text-dim: #949E98;
+      --border: #30373A;
+      --amber: #E3A34A;
+      --amber-soft: #3A2E1A;
+      --teal: #4FC2B8;
+      --teal-soft: #163330;
+      --red-flag: #E07B54;
+      --track: #2A3134;
+      --shadow: rgba(0,0,0,0.35);
+      --reach-air: #6FA8D8;
+      --reach-air-soft: #1D2C38;
+      --heat-strongneg-bg: #8C3A22; --heat-strongneg-fg: #FBE4DA;
+      --heat-neg-bg: #8A5A1E;       --heat-neg-fg: #FBEBD4;
+      --heat-neutral-bg: #2A3134;   --heat-neutral-fg: #C9CFCA;
+      --heat-pos-bg: #1E6B63;       --heat-pos-fg: #DFF3EF;
+      --heat-strongpos-bg: #134A44; --heat-strongpos-fg: #CFEDE7;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14181A;
+    --bg-panel: #1B2023;
+    --bg-sunken: #101314;
+    --text: #E9ECE9;
+    --text-dim: #949E98;
+    --border: #30373A;
+    --amber: #E3A34A;
+    --amber-soft: #3A2E1A;
+    --teal: #4FC2B8;
+    --teal-soft: #163330;
+    --red-flag: #E07B54;
+    --track: #2A3134;
+    --shadow: rgba(0,0,0,0.35);
+    --reach-air: #6FA8D8;
+    --reach-air-soft: #1D2C38;
+    --heat-strongneg-bg: #8C3A22; --heat-strongneg-fg: #FBE4DA;
+    --heat-neg-bg: #8A5A1E;       --heat-neg-fg: #FBEBD4;
+    --heat-neutral-bg: #2A3134;   --heat-neutral-fg: #C9CFCA;
+    --heat-pos-bg: #1E6B63;       --heat-pos-fg: #DFF3EF;
+    --heat-strongpos-bg: #134A44; --heat-strongpos-fg: #CFEDE7;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100%;
+  }
+  body { padding: 28px 18px 60px; }
+  .wrap { max-width: 980px; margin: 0 auto; }
+
+  .console-bar {
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 14px; margin-bottom: 22px;
+    border-bottom: 1px solid var(--border);
+  }
+  .signal-dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 0 3px var(--amber-soft);
+    flex-shrink: 0;
+  }
+  .console-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; letter-spacing: 0.06em;
+    color: var(--text-dim);
+  }
+
+  h1 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: clamp(24px, 4.2vw, 34px);
+    line-height: 1.15;
+    margin: 0 0 10px;
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 15px;
+    max-width: 66ch;
+    line-height: 1.55;
+    margin: 0 0 16px;
+  }
+
+  .reach-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 2px;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+  .reach-tag::before { content: ''; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+  .reach-air { color: var(--reach-air); background: var(--reach-air-soft); }
+  .reach-air::before { background: var(--reach-air); }
+  .demo-tag { color: var(--amber); background: var(--amber-soft); }
+  .demo-tag::before { background: var(--amber); }
+
+  .tag-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 22px; }
+  .tag-row .tag-note { font-size: 12.5px; color: var(--text-dim); }
+
+  .demo-notice {
+    display: flex; gap: 8px; align-items: flex-start;
+    background: var(--amber-soft);
+    border-left: 3px solid var(--red-flag);
+    padding: 11px 14px;
+    border-radius: var(--radius);
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--text);
+    margin-bottom: 28px;
+  }
+  .demo-notice::before {
+    content: '!';
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700;
+    color: var(--red-flag);
+    border: 1px solid var(--red-flag);
+    border-radius: 50%;
+    width: 15px; height: 15px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    margin-top: 1px;
+  }
+  .demo-notice b { color: var(--red-flag); }
+
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 32px;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .stat-cell { background: var(--bg-panel); padding: 16px 18px; }
+  .stat-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 21px;
+    color: var(--amber);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-num.pos { color: var(--teal); }
+  .stat-num.neg { color: var(--red-flag); }
+  .stat-label { font-size: 12px; color: var(--text-dim); margin-top: 4px; line-height: 1.4; }
+
+  .panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    margin-bottom: 24px;
+  }
+  .panel-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    flex-wrap: wrap; gap: 10px;
+    margin-bottom: 6px;
+  }
+  .panel-title { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 17px; }
+  .panel-note { font-size: 12.5px; color: var(--text-dim); margin-bottom: 16px; line-height: 1.5; max-width: 72ch; }
+
+  .reset-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    background: none; border: 1px solid var(--border); color: var(--text-dim);
+    cursor: pointer; padding: 7px 12px; border-radius: var(--radius);
+  }
+  .reset-btn:hover { border-color: var(--amber); color: var(--amber); }
+
+  .grid-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
+  table.grid { border-collapse: collapse; width: 100%; min-width: 460px; }
+  table.grid th, table.grid td {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    text-align: center;
+    padding: 0;
+    border: 1px solid var(--border);
+  }
+  .grp-row th {
+    background: var(--bg-sunken);
+    color: var(--text-dim);
+    font-size: 9.5px;
+    letter-spacing: 0.05em;
+    padding: 5px 2px;
+    border-bottom: 1px solid var(--border);
+  }
+  .day-row th {
+    background: var(--bg-sunken);
+    color: var(--text);
+    font-weight: 600;
+    font-size: 11px;
+    padding: 6px 2px;
+  }
+  .time-cell {
+    position: sticky; left: 0;
+    background: var(--bg-panel);
+    color: var(--text-dim);
+    font-size: 9.5px;
+    width: 46px; min-width: 46px;
+    padding: 3px 4px !important;
+    text-align: right !important;
+    z-index: 1;
+  }
+  .grp-row .time-cell, .day-row .time-cell { background: var(--bg-sunken); z-index: 2; }
+  .cell-btn {
+    display: block; width: 100%; height: 24px;
+    border: none; margin: 0; padding: 0;
+    background: transparent; color: inherit;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+  }
+  .cell-btn:focus-visible { outline: 2px solid var(--reach-air); outline-offset: -2px; }
+  .cell-input {
+    width: 100%; height: 24px; border: none; padding: 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 600; text-align: center;
+    background: var(--bg-panel); color: var(--text);
+    outline: 2px solid var(--reach-air); outline-offset: -2px;
+  }
+  .heat-strongneg { background: var(--heat-strongneg-bg); color: var(--heat-strongneg-fg); }
+  .heat-neg       { background: var(--heat-neg-bg);       color: var(--heat-neg-fg); }
+  .heat-neutral   { background: var(--heat-neutral-bg);   color: var(--heat-neutral-fg); }
+  .heat-pos       { background: var(--heat-pos-bg);       color: var(--heat-pos-fg); }
+  .heat-strongpos { background: var(--heat-strongpos-bg); color: var(--heat-strongpos-fg); }
+
+  .heat-legend {
+    display: flex; flex-wrap: wrap; gap: 14px;
+    margin-top: 14px;
+    font-size: 11.5px; color: var(--text-dim);
+  }
+  .heat-legend-item { display: flex; align-items: center; gap: 6px; }
+  .heat-chip { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+
+  .edit-hint { font-size: 12px; color: var(--text-dim); margin-top: 12px; }
+
+  .slot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+  }
+  .slot-list h3 {
+    font-family: 'Archivo', sans-serif;
+    font-size: 14px; margin: 0 0 10px;
+  }
+  .slot-list.weak h3 { color: var(--red-flag); }
+  .slot-list.strong h3 { color: var(--teal); }
+  .slot-row {
+    display: grid;
+    grid-template-columns: 76px 1fr 52px;
+    gap: 10px; align-items: center;
+    padding: 8px 0;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px;
+  }
+  .slot-row:first-of-type { border-top: none; }
+  .slot-when { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--text-dim); }
+  .slot-prog { line-height: 1.35; }
+  .slot-share { font-family: 'IBM Plex Mono', monospace; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+  .slot-list.weak .slot-share { color: var(--red-flag); }
+  .slot-list.strong .slot-share { color: var(--teal); }
+
+  footer {
+    margin-top: 32px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    font-size: 11.5px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 560px) {
+    .stat-num { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="console-bar">
+    <span class="signal-dot"></span>
+    <span class="console-label">МОДУЛЬ 1 · ЭФИРНАЯ СЕТКА · KAZAKHSTAN</span>
+  </div>
+
+  <h1>Пульс сетки: рейтинг по получасовым слотам</h1>
+  <p class="subtitle">Недельная сетка вещания в разбивке по получасовым слотам — рейтинг канала на фоне доступной аудитории (HUT), с автоматической подсветкой слотов, которые канал берёт лучше или хуже своего среднего.</p>
+
+  <div class="tag-row">
+    <span class="reach-tag reach-air">эфир</span>
+    <span class="reach-tag demo-tag">демо-данные</span>
+    <span class="tag-note">TNS/Kantar TV Index — панельные данные эфирного телесмотрения, срез 100 000+</span>
+  </div>
+
+  <div class="demo-notice">Цифры в сетке ниже — демонстрационные, сгенерированы по типовой форме получасовых профилей дня (будни / суббота / воскресенье) из отчёта TNS/Kantar. Когда будет готов файл еженедельной выгрузки — кликните по любой ячейке и впишите реальный рейтинг за эту неделю; демо-значение заменится вашим и останется в этом браузере.</div>
+
+  <div class="stat-strip" id="statStrip"></div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Неделя целиком: Пн–Вс, 06:00–25:30</div>
+      <button class="reset-btn" id="resetBtn">Сбросить к демо-значениям</button>
+    </div>
+    <p class="panel-note">Число в ячейке — рейтинг канала (%) за этот получасовой слот. Цвет — доля канала от доступной аудитории (HUT) в этом слоте относительно среднего за неделю, а не сам рейтинг: так слабый вечерний слот не теряется на фоне естественно низкой ночной аудитории.</p>
+    <div class="grid-scroll">
+      <table class="grid" id="gridTable"></table>
+    </div>
+    <div class="heat-legend">
+      <div class="heat-legend-item"><span class="heat-chip heat-strongneg"></span>Значительно ниже среднего</div>
+      <div class="heat-legend-item"><span class="heat-chip heat-neg"></span>Ниже среднего</div>
+      <div class="heat-legend-item"><span class="heat-chip heat-neutral"></span>Около среднего</div>
+      <div class="heat-legend-item"><span class="heat-chip heat-pos"></span>Выше среднего</div>
+      <div class="heat-legend-item"><span class="heat-chip heat-strongpos"></span>Значительно выше среднего</div>
+    </div>
+    <p class="edit-hint">Клик по ячейке — ввести реальный рейтинг вручную. Слоты глубокой ночи (HUT &lt; 15%) исключены из среднего — иначе редкие зрители ночью искажают картину.</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title" style="margin-bottom:16px;">Слоты, которые стоит разобрать в первую очередь</div>
+    <div class="slot-grid">
+      <div class="slot-list strong">
+        <h3>Топ-5 сильных слотов</h3>
+        <div id="strongList"></div>
+      </div>
+      <div class="slot-list weak">
+        <h3>Топ-5 слабых слотов</h3>
+        <div id="weakList"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Методология: рейтинг = HUT (доступная аудитория, %) × доля канала от HUT в этот слот. Структура листов и получасовая разбивка — по образцу еженедельного отчёта K Research Central Asia / Kantar TV Index Казахстан. Демо-данные не являются панельными измерениями и не заменяют реальный отчёт — используйте инструмент как каркас, который наполняется реальными цифрами по мере их поступления.
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var DAYS = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+  var DAY_FULL = ['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье'];
+  var SLOT_COUNT = 40; // 06:00 .. 25:30, step 30 min
+  var STORAGE_KEY = 'air-grid-pulse-v1';
+
+  function hourFrac(i){ return 6 + i * 0.5; }
+  function formatSlot(i){
+    var hf = hourFrac(i);
+    var h = Math.floor(hf);
+    var m = (hf - h) >= 0.5 ? '30' : '00';
+    return (h < 10 ? '0' : '') + h + ':' + m;
+  }
+  function dayType(dayIdx){ return dayIdx < 5 ? 'weekday' : (dayIdx === 5 ? 'saturday' : 'sunday'); }
+  function hashRand(seed){
+    var x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
+    return x - Math.floor(x);
+  }
+
+  var ANCHORS = {
+    weekday:  [[6,14],[8,24],[10,20],[12,17],[14,16],[16,19],[18,28],[19,38],[20,52],[21,58],[22,50],[23,34],[24,22],[25.5,12]],
+    saturday: [[6,10],[8,18],[10,32],[12,34],[14,33],[16,34],[18,38],[19,44],[20,56],[21,60],[22,52],[23,40],[24,28],[25.5,16]],
+    sunday:   [[6,10],[8,16],[10,26],[12,30],[14,31],[16,32],[18,36],[19,42],[20,54],[21,58],[22,48],[23,34],[24,22],[25.5,12]]
+  };
+  function interp(anchors, hf){
+    for (var k = 0; k < anchors.length - 1; k++){
+      var a = anchors[k], b = anchors[k+1];
+      if (hf >= a[0] && hf <= b[0]){
+        var t = (hf - a[0]) / (b[0] - a[0]);
+        return a[1] + t * (b[1] - a[1]);
+      }
+    }
+    return anchors[anchors.length - 1][1];
+  }
+  function potentialAt(dayIdx, i){
+    var dt = dayType(dayIdx);
+    var base = interp(ANCHORS[dt], hourFrac(i));
+    var jitter = (hashRand(dayIdx * 53 + i * 7 + 3) - 0.5) * 3;
+    return Math.max(4, base + jitter);
+  }
+
+  var WEEKDAY_BUCKETS = [
+    {s:6,e:9,name:'Утреннее шоу'},
+    {s:9,e:10,name:'Новости'},
+    {s:10,e:13,name:'Сериал (повтор)'},
+    {s:13,e:14,name:'Новости'},
+    {s:14,e:17,name:'Сериал (турецкий)'},
+    {s:17,e:18,name:'Ток-шоу'},
+    {s:18,e:19,name:'Новости (каз.)'},
+    {s:19,e:20,name:'Новости (рус.)'},
+    {s:20,e:21.5,name:'Сериал (прайм, собств. пр-во)'},
+    {s:21.5,e:23,name:'Ток-шоу'},
+    {s:23,e:24,name:'Аналитическая программа'},
+    {s:24,e:25.5,name:'Кино за полночь'}
+  ];
+  var SAT_BUCKETS = [
+    {s:6,e:9,name:'Повтор эфира'},
+    {s:9,e:12,name:'Детский блок (мультфильмы)'},
+    {s:12,e:14,name:'Новости выходного дня'},
+    {s:14,e:17,name:'Художественный фильм'},
+    {s:17,e:19,name:'Развлекательное шоу'},
+    {s:19,e:20,name:'Новости'},
+    {s:20,e:21.5,name:'Кино (премьера)'},
+    {s:21.5,e:23,name:'Ток-шоу'},
+    {s:23,e:25.5,name:'Кино за полночь'}
+  ];
+  var SUN_BUCKETS = [
+    {s:6,e:9,name:'Повтор эфира'},
+    {s:9,e:12,name:'Детский блок (мультфильмы)'},
+    {s:12,e:14,name:'Новости выходного дня'},
+    {s:14,e:17,name:'Художественный фильм'},
+    {s:17,e:19,name:'Развлекательное шоу'},
+    {s:19,e:20,name:'Новости'},
+    {s:20,e:21.5,name:'Итоговая аналитическая программа'},
+    {s:21.5,e:23,name:'Ток-шоу'},
+    {s:23,e:25.5,name:'Кино за полночь'}
+  ];
+  function programAt(dayIdx, i){
+    var hf = hourFrac(i);
+    var dt = dayType(dayIdx);
+    var buckets = dt === 'weekday' ? WEEKDAY_BUCKETS : (dt === 'saturday' ? SAT_BUCKETS : SUN_BUCKETS);
+    for (var k = 0; k < buckets.length; k++){
+      var b = buckets[k];
+      if (hf >= b.s && hf < b.e){
+        if (dayIdx === 4 && b.s === 21.5 && b.name === 'Ток-шоу') return 'Итоговая программа недели';
+        return b.name;
+      }
+    }
+    return buckets[buckets.length - 1].name;
+  }
+
+  function baseShareAt(dayIdx, i){
+    var hf = hourFrac(i);
+    var dt = dayType(dayIdx);
+    var j = (hashRand(dayIdx * 131 + i * 17 + 11) - 0.5);
+    var share = 0.34 + j * 0.06;
+
+    if (dt === 'weekday'){
+      if (hf >= 20 && hf < 21.5) share = 0.50 + j * 0.06;
+      if ((hf >= 13 && hf < 14) || (hf >= 18 && hf < 20)) share = Math.max(share, 0.42 + j * 0.04);
+      if (dayIdx === 4 && hf >= 21.5 && hf < 23) share = 0.51 + j * 0.05;
+      if (dayIdx === 2 && hf >= 21 && hf < 22.5) share = 0.17 + j * 0.03;
+    } else {
+      if (hf >= 9 && hf < 12) share = 0.49 + j * 0.05;
+      if ((hf >= 12 && hf < 14) || (hf >= 19 && hf < 20)) share = Math.max(share, 0.40 + j * 0.04);
+      if (dt === 'sunday' && hf >= 20 && hf < 21.5) share = 0.54 + j * 0.05;
+    }
+    if (hf >= 24) share = 0.20 + j * 0.08;
+    return Math.min(0.68, Math.max(0.06, share));
+  }
+
+  function loadOverrides(){
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch(e){ return {}; }
+  }
+  function saveOverrides(ov){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(ov)); } catch(e){ /* storage unavailable */ }
+  }
+
+  var overrides = loadOverrides();
+
+  function cellData(dayIdx, i){
+    var potential = potentialAt(dayIdx, i);
+    var key = dayIdx + '_' + i;
+    var fact, share;
+    if (Object.prototype.hasOwnProperty.call(overrides, key)){
+      fact = overrides[key];
+      share = potential > 0 ? fact / potential : 0;
+    } else {
+      share = baseShareAt(dayIdx, i);
+      fact = potential * share;
+    }
+    return { potential: potential, share: share, fact: fact, program: programAt(dayIdx, i), overridden: Object.prototype.hasOwnProperty.call(overrides, key) };
+  }
+
+  function computeAll(){
+    var cells = [];
+    for (var d = 0; d < 7; d++){
+      for (var i = 0; i < SLOT_COUNT; i++){
+        var c = cellData(d, i);
+        c.day = d; c.slot = i;
+        cells.push(c);
+      }
+    }
+    var counted = cells.filter(function(c){ return c.potential >= 15; });
+    var avgShare = counted.reduce(function(s,c){ return s + c.share; }, 0) / counted.length;
+    return { cells: cells, counted: counted, avgShare: avgShare };
+  }
+
+  function heatClass(share, avgShare){
+    var dev = share - avgShare;
+    if (dev < -0.12) return 'heat-strongneg';
+    if (dev < -0.04) return 'heat-neg';
+    if (dev <= 0.04) return 'heat-neutral';
+    if (dev <= 0.12) return 'heat-pos';
+    return 'heat-strongpos';
+  }
+
+  var gridTable = document.getElementById('gridTable');
+  var statStrip = document.getElementById('statStrip');
+  var strongList = document.getElementById('strongList');
+  var weakList = document.getElementById('weakList');
+  var openInput = null;
+
+  function commitOpenInput(){
+    if (!openInput) return;
+    var input = openInput;
+    openInput = null;
+    var val = parseFloat(input.value);
+    var d = parseInt(input.dataset.day, 10);
+    var i = parseInt(input.dataset.slot, 10);
+    if (!isNaN(val)){
+      overrides[d + '_' + i] = Math.max(0, Math.min(100, val));
+      saveOverrides(overrides);
+    }
+    renderAll();
+  }
+
+  function buildGrid(){
+    gridTable.innerHTML = '';
+    var thead = document.createElement('thead');
+
+    var grpRow = document.createElement('tr');
+    grpRow.className = 'grp-row';
+    grpRow.innerHTML = '<th class="time-cell"></th><th colspan="5">БУДНИ — профиль будней</th><th colspan="2">ВЫХОДНЫЕ — свой профиль на каждый день</th>';
+    thead.appendChild(grpRow);
+
+    var dayRow = document.createElement('tr');
+    dayRow.className = 'day-row';
+    var dayCells = '<th class="time-cell">слот</th>';
+    DAYS.forEach(function(d){ dayCells += '<th title="' + d + '">' + d + '</th>'; });
+    dayRow.innerHTML = dayCells;
+    thead.appendChild(dayRow);
+
+    gridTable.appendChild(thead);
+
+    var tbody = document.createElement('tbody');
+    for (var i = 0; i < SLOT_COUNT; i++){
+      var tr = document.createElement('tr');
+      var tdTime = document.createElement('td');
+      tdTime.className = 'time-cell';
+      tdTime.textContent = formatSlot(i);
+      tr.appendChild(tdTime);
+      for (var d = 0; d < 7; d++){
+        var td = document.createElement('td');
+        td.dataset.day = d;
+        td.dataset.slot = i;
+        tr.appendChild(td);
+      }
+      tbody.appendChild(tr);
+    }
+    gridTable.appendChild(tbody);
+  }
+
+  function paintGrid(model){
+    var tbody = gridTable.querySelector('tbody');
+    var rows = tbody.querySelectorAll('tr');
+    for (var i = 0; i < SLOT_COUNT; i++){
+      var tds = rows[i].querySelectorAll('td:not(.time-cell)');
+      for (var d = 0; d < 7; d++){
+        var c = cellData(d, i);
+        var td = tds[d];
+        var cls = heatClass(c.share, model.avgShare);
+        var title = DAY_FULL[d] + ' ' + formatSlot(i) + ' — ' + c.program + '. Рейтинг ' + c.fact.toFixed(1) + '%, HUT ' + c.potential.toFixed(0) + '%, доля ' + (c.share*100).toFixed(0) + '%' + (c.overridden ? ' (введено вручную)' : '');
+        td.className = cls;
+        td.title = title;
+        td.innerHTML = '';
+        var btn = document.createElement('button');
+        btn.className = 'cell-btn';
+        btn.type = 'button';
+        btn.textContent = c.fact.toFixed(1);
+        btn.dataset.day = d;
+        btn.dataset.slot = i;
+        btn.setAttribute('aria-label', title);
+        td.appendChild(btn);
+      }
+    }
+  }
+
+  gridTable.addEventListener('click', function(e){
+    var btn = e.target.closest('.cell-btn');
+    if (!btn) return;
+    if (openInput) commitOpenInput();
+    var td = btn.parentElement;
+    var d = btn.dataset.day, i = btn.dataset.slot;
+    var c = cellData(parseInt(d,10), parseInt(i,10));
+    td.innerHTML = '';
+    var input = document.createElement('input');
+    input.type = 'number';
+    input.step = '0.1';
+    input.min = '0';
+    input.max = '100';
+    input.className = 'cell-input';
+    input.value = c.fact.toFixed(1);
+    input.dataset.day = d;
+    input.dataset.slot = i;
+    td.appendChild(input);
+    openInput = input;
+    input.focus();
+    input.select();
+    input.addEventListener('keydown', function(ev){
+      if (ev.key === 'Enter') input.blur();
+      if (ev.key === 'Escape'){ openInput = null; renderAll(); }
+    });
+    input.addEventListener('blur', function(){ commitOpenInput(); });
+  });
+
+  function renderStats(model){
+    var sorted = model.counted.slice().sort(function(a,b){ return b.share - a.share; });
+    var best = sorted[0], worst = sorted[sorted.length - 1];
+    var weakCount = model.counted.filter(function(c){ return c.share - model.avgShare < -0.04; }).length;
+
+    statStrip.innerHTML =
+      '<div class="stat-cell"><div class="stat-num">' + (model.avgShare*100).toFixed(0) + '%</div>' +
+      '<div class="stat-label">средняя доля канала от доступной аудитории за неделю</div></div>' +
+      '<div class="stat-cell"><div class="stat-num pos">' + DAYS[best.day] + ' ' + formatSlot(best.slot) + '</div>' +
+      '<div class="stat-label">сильнейший слот — «' + best.program + '», доля ' + (best.share*100).toFixed(0) + '%</div></div>' +
+      '<div class="stat-cell"><div class="stat-num neg">' + DAYS[worst.day] + ' ' + formatSlot(worst.slot) + '</div>' +
+      '<div class="stat-label">слабейший слот — «' + worst.program + '», доля ' + (worst.share*100).toFixed(0) + '%</div></div>' +
+      '<div class="stat-cell"><div class="stat-num">' + weakCount + ' из ' + model.counted.length + '</div>' +
+      '<div class="stat-label">слотов заметно ниже своего среднего — кандидаты на пересмотр</div></div>';
+  }
+
+  function renderSlotList(el, items, positive){
+    el.innerHTML = '';
+    items.forEach(function(c){
+      var row = document.createElement('div');
+      row.className = 'slot-row';
+      row.innerHTML =
+        '<div class="slot-when">' + DAYS[c.day] + ' ' + formatSlot(c.slot) + '</div>' +
+        '<div class="slot-prog">' + c.program + '</div>' +
+        '<div class="slot-share">' + (positive ? '+' : '') + ((c.share*100).toFixed(0)) + '%</div>';
+      el.appendChild(row);
+    });
+  }
+
+  function renderLists(model){
+    var sorted = model.counted.slice().sort(function(a,b){ return b.share - a.share; });
+    renderSlotList(strongList, sorted.slice(0,5), true);
+    renderSlotList(weakList, sorted.slice(-5).reverse(), false);
+  }
+
+  function renderAll(){
+    var model = computeAll();
+    paintGrid(model);
+    renderStats(model);
+    renderLists(model);
+  }
+
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    overrides = {};
+    try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
+    renderAll();
+  });
+
+  buildGrid();
+  renderAll();
+})();
+</script>
+</body>
+</html>

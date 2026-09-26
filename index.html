@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Аналитика программной сетки</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EEF0EE;
+    --bg-panel: #FFFFFF;
+    --bg-sunken: #E3E6E3;
+    --text: #14181A;
+    --text-dim: #5B6460;
+    --border: #CBD1CC;
+    --amber: #C97E1E;
+    --amber-soft: #F3E2C9;
+    --teal: #1E7A73;
+    --teal-soft: #D3E7E4;
+    --reach-air: #2C5F8A;
+    --reach-air-soft: #D9E5EC;
+    --reach-net: #7C3F8C;
+    --reach-net-soft: #EBDCEE;
+    --radius: 3px;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --bg: #14181A;
+      --bg-panel: #1B2023;
+      --bg-sunken: #101314;
+      --text: #E9ECE9;
+      --text-dim: #949E98;
+      --border: #30373A;
+      --amber: #E3A34A;
+      --amber-soft: #3A2E1A;
+      --teal: #4FC2B8;
+      --teal-soft: #163330;
+      --reach-air: #6FA8D8;
+      --reach-air-soft: #1D2C38;
+      --reach-net: #C089D6;
+      --reach-net-soft: #2C2032;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14181A;
+    --bg-panel: #1B2023;
+    --bg-sunken: #101314;
+    --text: #E9ECE9;
+    --text-dim: #949E98;
+    --border: #30373A;
+    --amber: #E3A34A;
+    --amber-soft: #3A2E1A;
+    --teal: #4FC2B8;
+    --teal-soft: #163330;
+    --reach-air: #6FA8D8;
+    --reach-air-soft: #1D2C38;
+    --reach-net: #C089D6;
+    --reach-net-soft: #2C2032;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; min-height: 100%; }
+  body { padding: 28px 18px 60px; }
+  .wrap { max-width: 860px; margin: 0 auto; }
+
+  .console-bar { display: flex; align-items: center; gap: 10px; padding-bottom: 14px; margin-bottom: 22px; border-bottom: 1px solid var(--border); }
+  .signal-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 0 3px var(--amber-soft); flex-shrink: 0; }
+  .console-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: var(--text-dim); }
+
+  h1 { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: clamp(24px, 4.2vw, 34px); line-height: 1.15; margin: 0 0 10px; max-width: 20ch; text-wrap: balance; }
+  .subtitle { color: var(--text-dim); font-size: 15px; max-width: 66ch; line-height: 1.55; margin: 0 0 32px; }
+
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .tool-card {
+    display: flex; flex-direction: column; gap: 10px;
+    background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; text-decoration: none; color: var(--text);
+  }
+  .tool-card:hover { border-color: var(--amber); }
+  .tool-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.06em; color: var(--text-dim); text-transform: uppercase; }
+  .tool-name { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 19px; }
+  .tool-desc { font-size: 13.5px; color: var(--text-dim); line-height: 1.5; }
+  .tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  .reach-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 3px 7px; border-radius: 2px;
+  }
+  .reach-tag::before { content: ''; width: 5px; height: 5px; border-radius: 50%; display: inline-block; }
+  .reach-air { color: var(--reach-air); background: var(--reach-air-soft); }
+  .reach-air::before { background: var(--reach-air); }
+  .reach-net { color: var(--reach-net); background: var(--reach-net-soft); }
+  .reach-net::before { background: var(--reach-net); }
+  .tool-cta { margin-top: auto; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--amber); }
+
+  .status-panel {
+    background: var(--bg-sunken); border-radius: var(--radius); padding: 16px 18px;
+    font-size: 12.5px; color: var(--text-dim); line-height: 1.6;
+  }
+  .status-panel b { color: var(--text); }
+
+  footer { margin-top: 32px; padding-top: 18px; border-top: 1px solid var(--border); font-size: 11.5px; color: var(--text-dim); line-height: 1.7; }
+  footer a { color: var(--text-dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="console-bar">
+    <span class="signal-dot"></span>
+    <span class="console-label">ПРОГРАММНАЯ СЕТКА · АУДИТОРИЯ · KAZAKHSTAN</span>
+  </div>
+
+  <h1>Аналитика программной сетки и спроса аудитории</h1>
+  <p class="subtitle">Набор интерактивных инструментов для программного директора телеканала — сопоставить сетку вещания со спросом аудитории и найти недооценённые зоны роста рейтинга, без цикла постановки задачи в IT-отдел.</p>
+
+  <div class="card-grid">
+    <a class="tool-card" href="puls-setki.html">
+      <div class="tool-eyebrow">Модуль 1</div>
+      <div class="tool-name">Пульс сетки</div>
+      <div class="tool-desc">Недельная сетка вещания по получасовым слотам: рейтинг = HUT × доля канала, автоматическая подсветка слотов ниже/выше среднего, ручной ввод реальных цифр по клику.</div>
+      <div class="tag-row"><span class="reach-tag reach-air">эфир</span></div>
+      <div class="tool-cta">Открыть →</div>
+    </a>
+    <a class="tool-card" href="sprosom-predlozhenie.html">
+      <div class="tool-eyebrow">Модуль 2+3</div>
+      <div class="tool-name">Спрос и предложение</div>
+      <div class="tool-desc">Сверка доли эфира под контент разного происхождения с публичным спросом аудитории, плюс жанровые и тайминговые ориентиры.</div>
+      <div class="tag-row"><span class="reach-tag reach-air">эфир</span><span class="reach-tag reach-net">интернет</span></div>
+      <div class="tool-cta">Открыть →</div>
+    </a>
+  </div>
+
+  <div class="status-panel">
+    <b>Модуль 4</b> (симулятор перестановок) и дальнейшее наполнение <b>Модуля 1</b> реальными цифрами TNS/Kantar — следующие шаги. Подробности и история решений — в <a href="PRD.md">PRD.md</a>.
+  </div>
+
+  <footer>
+    Каждый модуль — самостоятельный веб-инструмент, который дорабатывается за один разговор с Claude, без формального ТЗ для разработчиков на каждую правку. Пользовательский ввод хранится локально в браузере и не передаётся на сервер.
+  </footer>
+
+</div>
+</body>
+</html>

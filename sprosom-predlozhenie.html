@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Спрос и предложение: контент казахстанской аудитории</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EEF0EE;
+    --bg-panel: #FFFFFF;
+    --bg-sunken: #E3E6E3;
+    --text: #14181A;
+    --text-dim: #5B6460;
+    --border: #CBD1CC;
+    --amber: #C97E1E;
+    --amber-soft: #F3E2C9;
+    --teal: #1E7A73;
+    --teal-soft: #D3E7E4;
+    --red-flag: #B3441F;
+    --track: #D6D9D5;
+    --shadow: rgba(20,24,26,0.08);
+    --reach-air: #2C5F8A;
+    --reach-air-soft: #D9E5EC;
+    --reach-net: #7C3F8C;
+    --reach-net-soft: #EBDCEE;
+    --reach-global: #5B6460;
+    --reach-global-soft: #E3E6E3;
+    --radius: 3px;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --bg: #14181A;
+      --bg-panel: #1B2023;
+      --bg-sunken: #101314;
+      --text: #E9ECE9;
+      --text-dim: #949E98;
+      --border: #30373A;
+      --amber: #E3A34A;
+      --amber-soft: #3A2E1A;
+      --teal: #4FC2B8;
+      --teal-soft: #163330;
+      --red-flag: #E07B54;
+      --track: #2A3134;
+      --shadow: rgba(0,0,0,0.35);
+      --reach-air: #6FA8D8;
+      --reach-air-soft: #1D2C38;
+      --reach-net: #C089D6;
+      --reach-net-soft: #2C2032;
+      --reach-global: #949E98;
+      --reach-global-soft: #20262A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14181A;
+    --bg-panel: #1B2023;
+    --bg-sunken: #101314;
+    --text: #E9ECE9;
+    --text-dim: #949E98;
+    --border: #30373A;
+    --amber: #E3A34A;
+    --amber-soft: #3A2E1A;
+    --teal: #4FC2B8;
+    --teal-soft: #163330;
+    --red-flag: #E07B54;
+    --track: #2A3134;
+    --shadow: rgba(0,0,0,0.35);
+    --reach-air: #6FA8D8;
+    --reach-air-soft: #1D2C38;
+    --reach-net: #C089D6;
+    --reach-net-soft: #2C2032;
+    --reach-global: #949E98;
+    --reach-global-soft: #20262A;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100%;
+  }
+  body { padding: 28px 18px 60px; }
+  .wrap { max-width: 920px; margin: 0 auto; }
+
+  .console-bar {
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 14px; margin-bottom: 22px;
+    border-bottom: 1px solid var(--border);
+  }
+  .signal-dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 0 3px var(--amber-soft);
+    flex-shrink: 0;
+  }
+  .console-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; letter-spacing: 0.06em;
+    color: var(--text-dim);
+  }
+
+  h1 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: clamp(24px, 4.2vw, 34px);
+    line-height: 1.15;
+    margin: 0 0 10px;
+    max-width: 18ch;
+    text-wrap: balance;
+  }
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 15px;
+    max-width: 62ch;
+    line-height: 1.55;
+    margin: 0 0 20px;
+  }
+
+  .reach-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 2px;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+  .reach-tag::before {
+    content: ''; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0;
+  }
+  .reach-air { color: var(--reach-air); background: var(--reach-air-soft); }
+  .reach-air::before { background: var(--reach-air); }
+  .reach-net { color: var(--reach-net); background: var(--reach-net-soft); }
+  .reach-net::before { background: var(--reach-net); }
+  .reach-global { color: var(--reach-global); background: var(--reach-global-soft); }
+  .reach-global::before { background: var(--reach-global); }
+
+  .reach-key {
+    display: flex; flex-wrap: wrap; gap: 9px 22px;
+    align-items: flex-start;
+    padding: 12px 14px;
+    background: var(--bg-sunken);
+    border-radius: var(--radius);
+    margin-bottom: 26px;
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.4;
+  }
+  .reach-key-item { display: flex; align-items: center; gap: 8px; }
+  .reach-key-item span.reach-desc { max-width: 32ch; }
+
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 32px;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .stat-cell {
+    background: var(--bg-panel);
+    padding: 16px 18px;
+  }
+  .stat-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 9px; }
+  .stat-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--amber);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-label {
+    font-size: 12.5px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  .panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 20px 8px;
+    margin-bottom: 24px;
+  }
+  .panel-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    flex-wrap: wrap; gap: 10px;
+    margin-bottom: 6px;
+  }
+  .panel-title {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+  }
+  .panel-note {
+    font-size: 12.5px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    line-height: 1.5;
+    max-width: 68ch;
+  }
+
+  .legend {
+    display: flex; gap: 18px; flex-wrap: wrap; font-size: 12px; color: var(--text-dim);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-bottom: 14px;
+  }
+  .legend span.legend-item { display: inline-flex; align-items: center; gap: 7px; }
+  .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+  .audience-warning {
+    display: flex; gap: 8px; align-items: flex-start;
+    background: var(--amber-soft);
+    border-left: 3px solid var(--red-flag);
+    padding: 11px 14px;
+    border-radius: var(--radius);
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--text);
+    margin-bottom: 18px;
+  }
+  .audience-warning::before {
+    content: '!';
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700;
+    color: var(--red-flag);
+    border: 1px solid var(--red-flag);
+    border-radius: 50%;
+    width: 15px; height: 15px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    margin-top: 1px;
+  }
+  .audience-warning b { color: var(--red-flag); }
+
+  .total-readout {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    padding: 8px 12px;
+    background: var(--bg-sunken);
+    border-radius: var(--radius);
+    margin-bottom: 18px;
+    width: fit-content;
+  }
+  .total-readout b { font-size: 15px; color: var(--text); }
+  .total-warn { color: var(--red-flag); }
+  .total-ok { color: var(--teal); }
+
+  .sort-btn {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12.5px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 7px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+  .sort-btn:hover { border-color: var(--amber); color: var(--amber); }
+  .sort-btn:focus-visible, .fader:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+
+  .row {
+    display: grid;
+    grid-template-columns: 120px 1fr 70px;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+  }
+  .row:first-of-type { border-top: none; }
+  .row-label {
+    font-size: 13.5px;
+    font-weight: 500;
+  }
+  .row-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .fader-track {
+    position: relative;
+    height: 26px;
+    display: flex;
+    align-items: center;
+  }
+  .fader-fill-bg {
+    position: absolute;
+    left: 0; top: 9px; height: 8px; width: 100%;
+    background: var(--track);
+    border-radius: 4px;
+  }
+  .fader-fill {
+    position: absolute;
+    left: 0; top: 9px; height: 8px;
+    background: var(--teal);
+    border-radius: 4px;
+    pointer-events: none;
+  }
+  .demand-marker {
+    position: absolute;
+    top: 2px; width: 2px; height: 22px;
+    background: var(--amber);
+    pointer-events: none;
+  }
+  .demand-marker::after {
+    content: '';
+    position: absolute; top: -4px; left: -3px;
+    width: 8px; height: 8px;
+    background: var(--amber);
+    border-radius: 1px;
+    transform: rotate(45deg);
+  }
+  .fader {
+    -webkit-appearance: none;
+    appearance: none;
+    position: relative;
+    width: 100%;
+    height: 26px;
+    background: transparent;
+    margin: 0;
+  }
+  .fader::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 26px;
+    border-radius: 3px;
+    background: var(--text);
+    border: 2px solid var(--bg-panel);
+    cursor: pointer;
+    margin-top: 0;
+  }
+  .fader::-moz-range-thumb {
+    width: 14px; height: 26px;
+    border-radius: 3px;
+    background: var(--text);
+    border: 2px solid var(--bg-panel);
+    cursor: pointer;
+  }
+  .fader::-webkit-slider-runnable-track { background: transparent; height: 26px; }
+  .fader::-moz-range-track { background: transparent; height: 26px; }
+
+  .gap-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    text-align: right;
+    font-weight: 600;
+  }
+  .gap-pos { color: var(--amber); }
+  .gap-neg { color: var(--teal); }
+  .gap-neutral { color: var(--text-dim); }
+
+  .insight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+  }
+  .insight-card {
+    background: var(--bg-sunken);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .card-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 10px; flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .insight-card h3 {
+    font-family: 'Archivo', sans-serif;
+    font-size: 13.5px;
+    margin: 0;
+    color: var(--amber);
+  }
+  .insight-card p, .insight-card ol, .insight-card ul {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text);
+    margin: 0;
+    padding-left: 18px;
+  }
+  .insight-card ol { padding-left: 20px; }
+  .insight-card .card-note {
+    padding-left: 0;
+    margin-top: 8px;
+    color: var(--text-dim);
+    font-size: 12px;
+  }
+
+  footer {
+    margin-top: 32px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    font-size: 11.5px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+  footer a { color: var(--text-dim); }
+  .source-list { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .source-list li { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .reset-line {
+    margin-top: 14px;
+    display: flex; gap: 12px; align-items: center;
+  }
+  .reset-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    background: none; border: none; color: var(--text-dim);
+    text-decoration: underline; cursor: pointer; padding: 0;
+  }
+
+  @media (max-width: 560px) {
+    .row { grid-template-columns: 92px 1fr 54px; gap: 8px; }
+    .row-label { font-size: 12.5px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="console-bar">
+    <span class="signal-dot"></span>
+    <span class="console-label">СЕТКА · АУДИТОРИЯ · KAZAKHSTAN</span>
+  </div>
+
+  <h1>Спрос и предложение контента для казахстанской аудитории</h1>
+  <p class="subtitle">Интерактивная сверка: сколько эфира вы сейчас отдаёте под контент разного происхождения — и насколько это совпадает с тем, что реально предпочитает аудитория, по открытым исследованиям рынка.</p>
+
+  <div class="reach-key">
+    <div class="reach-key-item"><span class="reach-tag reach-air">Эфир</span><span class="reach-desc">эфирное ТВ — широкая аудитория, в среднем старше</span></div>
+    <div class="reach-key-item"><span class="reach-tag reach-net">Интернет</span><span class="reach-desc">стриминг и соцсети — преимущественно 18–34</span></div>
+    <div class="reach-key-item"><span class="reach-tag reach-global">Глобально</span><span class="reach-desc">общемировые ориентиры, не KZ-специфика</span></div>
+  </div>
+
+  <div class="stat-strip">
+    <div class="stat-cell">
+      <div class="stat-tags"><span class="reach-tag reach-air">эфир</span><span class="reach-tag reach-net">интернет</span></div>
+      <div class="stat-num">153 мин</div>
+      <div class="stat-label">среднее ТВ-смотрение в неделю на человека, все виды доставки сигнала (было 195 мин в 2019 — исследование K Research Central Asia)</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-tags"><span class="reach-tag reach-air">эфир</span><span class="reach-tag reach-net">интернет</span></div>
+      <div class="stat-num">27.2%</div>
+      <div class="stat-label">доля именно эфирного ТВ; кабель/интернет-ТВ смотрят 61.1% аудитории — это уже другой профиль зрителя</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-tags"><span class="reach-tag reach-net">интернет</span></div>
+      <div class="stat-num">СРЕДА</div>
+      <div class="stat-label">пиковый день недели по просмотру видео на стриминге — не пятница и не выходные (данные Megogo, 2025)</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Происхождение контента: ваша сетка vs спрос</div>
+      <button class="sort-btn" id="sortBtn">Сортировать по разрыву</button>
+    </div>
+    <p class="panel-note">Оранжевая метка на шкале — доля зрителей, которые называли этот тип контента среди предпочитаемых. Бегунок — ваша текущая доля эфира. Двигайте бегунки под свои реальные цифры сетки.</p>
+    <div class="legend">
+      <span class="legend-item"><i class="swatch" style="background:var(--teal)"></i>Ваш эфир, % <span class="reach-tag reach-air">эфир</span></span>
+      <span class="legend-item"><i class="swatch" style="background:var(--amber)"></i>Спрос аудитории, % <span class="reach-tag reach-net">интернет</span></span>
+    </div>
+    <div class="audience-warning">Это два разных профиля зрителя. «Ваш эфир» — фактическая доля вашего эфирного канала (вводите сами). «Спрос аудитории» — опрос молодёжи (inbusiness.kz), то есть аудитория интернета и соцсетей 18–34, а не тот же зритель, что смотрит эфир 45+. Разрыв здесь — сигнал для проверки гипотезы, а не прямое доказательство спроса у вашей текущей эфирной аудитории.</div>
+    <div class="total-readout" id="totalReadout">Сумма вашей сетки: <b id="totalVal">—</b>%</div>
+    <div id="rows"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title" style="margin-bottom:14px;">Дополнительные ориентиры (не интерактивно — качественные сигналы, не точные проценты по слотам)</div>
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="card-head">
+          <h3>Топ жанров у стриминговой аудитории</h3>
+          <span class="reach-tag reach-net">интернет</span>
+        </div>
+        <p>Кино: экшн, приключения, фантастика — зрителю важен эффект «кинособытия» даже дома. Сериалы: детектив и драма смотрят вечер за вечером, эпизод за эпизодом.</p>
+      </div>
+      <div class="insight-card">
+        <div class="card-head">
+          <h3>Тайминг</h3>
+          <span class="reach-tag reach-net">интернет</span>
+        </div>
+        <p>Прайм-тайм детского контента на стриминге — около 20:00, общий прайм-тайм — около 21:00. Возможное окно для взрослого контента сразу после детского блока — эффект «лид-ин».</p>
+        <p class="card-note">Источник — Megogo (стриминг). Эфирный прайм-тайм на вашем канале может отличаться — сверяйте с собственными данными TNS/Kantar, когда они появятся.</p>
+      </div>
+      <div class="insight-card">
+        <div class="card-head">
+          <h3>Азиатский контент — растущая ниша</h3>
+          <span class="reach-tag reach-net">интернет</span>
+        </div>
+        <p>Корейские и китайские сериалы формируют заметную нишу интереса (эмоция, темп, драма) — небольшая доля эфира здесь может быть недорогим тестом на дифференциацию от прямых конкурентов.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Источники:
+    <ul class="source-list">
+      <li><span class="reach-tag reach-net">интернет</span> опрос молодёжной аудитории о происхождении видеоконтента — inbusiness.kz</li>
+      <li><span class="reach-tag reach-net">интернет</span> итоги 2025 года Megogo в Казахстане (жанры, тайминг, день недели) — bes.media</li>
+      <li><span class="reach-tag reach-air">эфир</span><span class="reach-tag reach-net">интернет</span> исследование телесмотрения K Research Central Asia, представленное Национальной медиа-ассоциации — bes.media</li>
+    </ul>
+    <div style="margin-top:10px;">Данные агрегированные и публичные — это не внутренняя аналитика конкретного телеканала и не панель Kantar/TNS Central Asia. Проценты спроса по происхождению получены методом множественного выбора, поэтому не суммируются в 100%. Метки «эфир» / «интернет» / «глобально» показывают, к какому профилю зрителя относится каждый показатель — не смешивайте их при принятии решений по сетке.</div>
+    <div class="reset-line">
+      <button class="reset-btn" id="resetBtn">Сбросить к значениям по умолчанию</button>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var DATA = [
+    { key: 'kz',     label: 'Казахстанский',   demand: 57.7, supply: 45 },
+    { key: 'ru',     label: 'Российский',      demand: 45.1, supply: 30 },
+    { key: 'us',     label: 'Голливуд',        demand: 41.9, supply: 10 },
+    { key: 'tr',     label: 'Турецкий',        demand: 24.3, supply: 5  },
+    { key: 'eu',     label: 'Европейский',     demand: 23.8, supply: 3  },
+    { key: 'kr',     label: 'Корейский',       demand: 20.4, supply: 3  },
+    { key: 'jp',     label: 'Аниме / Япония',  demand: 12.1, supply: 1  },
+    { key: 'cn',     label: 'Китайский',       demand: 7.9,  supply: 2  },
+    { key: 'in',     label: 'Индийский',       demand: 7.1,  supply: 1  }
+  ];
+
+  var STORAGE_KEY = 'kz-supply-demand-v1';
+  var rowsEl = document.getElementById('rows');
+  var order = DATA.map(function(d){ return d.key; });
+  var sortedByGap = false;
+
+  function loadSupply(){
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      var saved = JSON.parse(raw);
+      DATA.forEach(function(d){
+        if (typeof saved[d.key] === 'number') d.supply = saved[d.key];
+      });
+    } catch(e) { /* ignore, use defaults */ }
+  }
+
+  function saveSupply(){
+    try {
+      var out = {};
+      DATA.forEach(function(d){ out[d.key] = d.supply; });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(out));
+    } catch(e) { /* storage unavailable, continue silently */ }
+  }
+
+  function gapClass(gap){
+    if (gap > 4) return 'gap-pos';
+    if (gap < -4) return 'gap-neg';
+    return 'gap-neutral';
+  }
+
+  function render(){
+    rowsEl.innerHTML = '';
+    var list = order.map(function(k){ return DATA.find(function(d){ return d.key === k; }); });
+    list.forEach(function(d){
+      var gap = d.demand - d.supply;
+      var row = document.createElement('div');
+      row.className = 'row';
+      row.innerHTML =
+        '<div><div class="row-label">' + d.label + '</div><div class="row-sub">спрос ' + d.demand.toFixed(1) + '%</div></div>' +
+        '<div class="fader-track">' +
+          '<div class="fader-fill-bg"></div>' +
+          '<div class="fader-fill" style="width:' + d.supply + '%"></div>' +
+          '<div class="demand-marker" style="left:calc(' + d.demand + '% - 1px)"></div>' +
+          '<input type="range" min="0" max="100" step="1" value="' + d.supply + '" class="fader" data-key="' + d.key + '" aria-label="Доля эфира: ' + d.label + '">' +
+        '</div>' +
+        '<div class="gap-val ' + gapClass(gap) + '">' + (gap > 0 ? '+' : '') + gap.toFixed(1) + '</div>';
+      rowsEl.appendChild(row);
+    });
+    updateTotal();
+  }
+
+  function updateTotal(){
+    var total = DATA.reduce(function(s,d){ return s + d.supply; }, 0);
+    var el = document.getElementById('totalVal');
+    var wrap = document.getElementById('totalReadout');
+    el.textContent = total.toFixed(0);
+    wrap.classList.remove('total-ok','total-warn');
+    if (Math.abs(total - 100) <= 3) {
+      wrap.classList.add('total-ok');
+    } else {
+      wrap.classList.add('total-warn');
+    }
+  }
+
+  rowsEl.addEventListener('input', function(e){
+    if (!e.target.classList.contains('fader')) return;
+    var key = e.target.dataset.key;
+    var d = DATA.find(function(x){ return x.key === key; });
+    d.supply = parseInt(e.target.value, 10);
+    saveSupply();
+    render();
+    if (sortedByGap) applySort();
+  });
+
+  function applySort(){
+    order = DATA.slice().sort(function(a,b){
+      return Math.abs(b.demand - b.supply) - Math.abs(a.demand - a.supply);
+    }).map(function(d){ return d.key; });
+    render();
+  }
+
+  document.getElementById('sortBtn').addEventListener('click', function(){
+    sortedByGap = !sortedByGap;
+    this.textContent = sortedByGap ? 'Вернуть исходный порядок' : 'Сортировать по разрыву';
+    if (sortedByGap) applySort();
+    else { order = DATA.map(function(d){ return d.key; }); render(); }
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+    location.reload();
+  });
+
+  loadSupply();
+  render();
+})();
+</script>
+</body>
+</html>
